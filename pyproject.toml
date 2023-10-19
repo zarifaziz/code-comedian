@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "joke-judge-ai"
+version = "0.1.0"
+description = "let GPT tell you if your joke is funny or not"
+authors = ["Zarif Aziz <zarif.aziz@github.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+loguru = "^0.7.2"
+uvicorn = "^0.23.2"
+fastapi = "^0.104.0"
+pydantic = "^2.4.2"
+pydantic-settings = "^2.0.3"
+pathlib = "^1.0.1"
+
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.10.0"
+isort = "^5.12.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
