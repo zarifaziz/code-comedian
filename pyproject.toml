@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "code-comedian"
 version = "0.1.0"
-description = "GPT judges if your developer joke is funny or not"
+description = "You think you have a funny developer joke? Let AI be the judge."
 authors = ["Zarif Aziz <zarif.aziz@github.com>"]
 license = "MIT"
 readme = "README.md"

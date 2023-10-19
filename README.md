@@ -1,2 +1,2 @@
-# joke-judge-ai
-let GPT tell you if your joke is funny or not
+# code-comedian
+You think you have a funny developer joke? Let AI be the judge.
