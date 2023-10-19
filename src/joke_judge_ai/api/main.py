@@ -1,7 +1,11 @@
 import uvicorn
-from fastapi import FastAPI, Request
+from fastapi import APIRouter, FastAPI
+from loguru import logger
+import openai
 
 from ..settings import settings
+
+openai.api_key = settings.OPENAI_API_KEY
 
 app = FastAPI(
     title="Joke Judge AI",
@@ -10,18 +14,28 @@ app = FastAPI(
     openapi_url=f"{settings.fastapi.prefix}/openapi.json",
 )
 
+router = APIRouter(prefix=settings.fastapi.prefix)
 
-@app.post("/joke")
+
+@router.get("/joke")
+def get_joke():
+    """Returns a joke"""
+    return {"message": "This is a joke!"}
+
+
+@router.post("/joke")
 def judge_joke():
     """Judges your joke"""
-    return {"message": "Hello, World!"}
+    
 
+
+app.include_router(router)
 
 if __name__ == "__main__":
+    logger.info("Starting server...")
     uvicorn.run(
         "src.joke_judge_ai.api.main:app",
         host=settings.fastapi.host,
         port=settings.fastapi.port,
-        log_config=None,
         reload=settings.fastapi.reload,
     )

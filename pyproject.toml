@@ -1,7 +1,7 @@
 [tool.poetry]
-name = "joke-judge-ai"
+name = "code-comedian"
 version = "0.1.0"
-description = "let GPT tell you if your joke is funny or not"
+description = "GPT judges if your developer joke is funny or not"
 authors = ["Zarif Aziz <zarif.aziz@github.com>"]
 license = "MIT"
 readme = "README.md"
@@ -14,6 +14,7 @@ fastapi = "^0.104.0"
 pydantic = "^2.4.2"
 pydantic-settings = "^2.0.3"
 pathlib = "^1.0.1"
+openai = "^0.28.1"
 
 
 [tool.poetry.group.dev.dependencies]
