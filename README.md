@@ -24,7 +24,10 @@ You can make requests to the API server using the routes defined in `src/code_co
 
 To get your joke judged, you can send a POST request to /joke with the joke content in the request body.
 ```
-curl -X POST "http://localhost:8000/code-comedian/joke" -H  "accept: application/json" -H  "Content-Type: application/json" -d "{\"content\":\"Your joke here\"}"
+curl -X POST "http://localhost:8000/code-comedian/joke" \
+     -H  "accept: application/json" \
+     -H  "Content-Type: application/json" \
+     -d "{\"content\":\"Your joke here\"}"
 ```
 
 ## About the Project
