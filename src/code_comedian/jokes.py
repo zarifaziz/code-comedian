@@ -49,9 +49,8 @@ class JokeJudge:
         openai.api_key = settings.OPENAI_API_KEY
         self.model = "gpt-3.5-turbo-16k"
         self.num_tries = 5
-        self.prompt = json.load(
-            open(Path(__file__).parent / "prompt_with_safety.json", "r")
-        )
+        with open(Path(__file__).parent / "prompt_with_safety.json", "r", encoding='utf-8') as f:
+            self.prompt = json.load(f)
 
     async def judge(
         self,
@@ -76,7 +75,7 @@ class JokeJudge:
                     raise ValueError("Joke not detected")
 
                 response = json.loads(reply)
-                
+
                 return Judgement(**response)
 
             except (ValueError, TypeError) as e:

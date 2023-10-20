@@ -1,3 +1,8 @@
+"""
+This module contains the main application for the Joke Judge AI API.
+It sets up the FastAPI application, defines the routes, and runs the server.
+"""
+
 import openai
 import uvicorn
 from fastapi import APIRouter, FastAPI
