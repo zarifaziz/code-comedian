@@ -8,7 +8,7 @@ class FastAPISettings(BaseModel):
     """FastAPI settings"""
 
     port: int = 8000
-    prefix: str = "/joke-judge-ai"
+    prefix: str = "/code-comedian"
     host: str = "0.0.0.0"
     api_dir: Path = Path(__file__).absolute().parent / "api"
     reload: bool = False

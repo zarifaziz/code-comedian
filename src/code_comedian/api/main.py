@@ -4,6 +4,7 @@ from loguru import logger
 import openai
 
 from ..settings import settings
+from ..jokes import JokeJudge, Joke, Judgement
 
 openai.api_key = settings.OPENAI_API_KEY
 
@@ -24,9 +25,14 @@ def get_joke():
 
 
 @router.post("/joke")
-def judge_joke():
+async def judge_joke(
+    request: Joke,
+):
     """Judges your joke"""
-    
+    judge = JokeJudge()
+    judgement = await judge.judge(request.content)
+
+    return Judgement(**judgement.dict())
 
 
 app.include_router(router)
@@ -34,7 +40,7 @@ app.include_router(router)
 if __name__ == "__main__":
     logger.info("Starting server...")
     uvicorn.run(
-        "src.joke_judge_ai.api.main:app",
+        "src.code_comedian.api.main:app",
         host=settings.fastapi.host,
         port=settings.fastapi.port,
         reload=settings.fastapi.reload,

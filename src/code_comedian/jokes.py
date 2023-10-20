@@ -4,6 +4,7 @@ from enum import Enum
 from pydantic import BaseModel, Field, validator
 import json
 from copy import deepcopy
+from pathlib import Path
 
 from .settings import settings
 
@@ -31,7 +32,7 @@ class JokeJudge:
         openai.api_key = settings.OPENAI_API_KEY
         self.model = "gpt-3.5-turbo-16k"
         self.num_tries = 5
-        self.prompt = json.load(open("prompt.json", "r"))
+        self.prompt = json.load(open(Path(__file__).parent / "prompt_with_safety.json", "r"))
     
     async def judge(
         self,
@@ -39,20 +40,22 @@ class JokeJudge:
     ):
         """Judges a joke"""
         messages = deepcopy(self.prompt)
+        messages.append({"role": "user", "content": content})
         reply = None
 
         for try_num in range(self.num_tries):
             try:
                 logger.info(f"try {try_num+1}/{self.num_tries} to get a response")
-                response = openai.Completion.create(
-                    engine=self.model,
-                    prompt=content,
+                response = await openai.Completion.acreate(
+                    model=self.model,
+                    messages=messages,
                     temperature=0.1,
                     max_tokens=768,
                 )
                 reply = response["choices"][0]["message"]["content"]
+                response = json.loads(reply)
 
-                funny_rating = FunnyRatingEnum(response.choices[0].text)
+                funny_rating = FunnyRatingEnum(**response)
                 return Judgement(joke=Joke(content=content), funny_rating=funny_rating)
 
             except (ValueError, TypeError) as e:
