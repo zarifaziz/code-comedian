@@ -10,15 +10,8 @@ from pydantic import BaseModel, Field, validator
 from .settings import settings
 
 
-class Joke(BaseModel):
-    """Joke class"""
-
-    content: str = Field(
-        ...,
-        title="Content",
-        description="The entire joke content including the punchline",
-    )
-
+class JokeNotDetectedError(Exception):
+    """Raised when a joke is not detected"""
 
 class FunnyRatingEnum(str, Enum):
     """Funny rating enum"""
@@ -71,8 +64,9 @@ class JokeJudge:
                     max_tokens=768,
                 )
                 reply = response["choices"][0]["message"]["content"]
+                logger.error(f"reply: {reply}")
                 if reply == "Joke not detected":
-                    raise ValueError("Joke not detected")
+                    raise JokeNotDetectedError("Joke not detected")
 
                 response = json.loads(reply)
 

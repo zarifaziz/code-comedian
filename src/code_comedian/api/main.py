@@ -5,10 +5,10 @@ It sets up the FastAPI application, defines the routes, and runs the server.
 
 import openai
 import uvicorn
-from fastapi import APIRouter, FastAPI
+from fastapi import APIRouter, FastAPI, HTTPException
 from loguru import logger
 
-from ..jokes import Joke, JokeJudge, Judgement
+from ..jokes import Joke, JokeJudge, Judgement, JokeNotDetectedError
 from ..settings import settings
 
 openai.api_key = settings.OPENAI_API_KEY
@@ -35,7 +35,12 @@ async def judge_joke(
 ):
     """Judges your joke"""
     judge = JokeJudge()
-    judgement = await judge.judge(request.content)
+    try:
+        judgement = await judge.judge(request.content)
+        logger.info(f"judgement: {judgement}")
+
+    except JokeNotDetectedError as e:
+        raise HTTPException(status_code=422, detail=str(e)) from e
 
     return Judgement(**judgement.dict())
 
