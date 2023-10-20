@@ -12,6 +12,18 @@ from .settings import settings
 
 class JokeNotDetectedError(Exception):
     """Raised when a joke is not detected"""
+    pass
+
+
+class Joke(BaseModel):
+    """Joke class"""
+
+    content: str = Field(
+        ...,
+        title="Content",
+        description="The entire joke content including the punchline",
+    )
+
 
 class FunnyRatingEnum(str, Enum):
     """Funny rating enum"""
@@ -42,7 +54,7 @@ class JokeJudge:
         openai.api_key = settings.OPENAI_API_KEY
         self.model = "gpt-3.5-turbo-16k"
         self.num_tries = 5
-        with open(Path(__file__).parent / "prompt_with_safety.json", "r", encoding='utf-8') as f:
+        with open(Path(__file__).parent / "prompts/prompt_with_safety.json", "r", encoding='utf-8') as f:
             self.prompt = json.load(f)
 
     async def judge(
