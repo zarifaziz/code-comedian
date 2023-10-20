@@ -1,39 +1,58 @@
-import openai 
-from loguru import logger
-from enum import Enum
-from pydantic import BaseModel, Field, validator
 import json
 from copy import deepcopy
+from enum import Enum
 from pathlib import Path
+
+import openai
+from loguru import logger
+from pydantic import BaseModel, Field, validator
 
 from .settings import settings
 
+
 class Joke(BaseModel):
     """Joke class"""
-    content: str = Field(..., title="Content", description="The entire joke content including the punchline")
+
+    content: str = Field(
+        ...,
+        title="Content",
+        description="The entire joke content including the punchline",
+    )
+
 
 class FunnyRatingEnum(str, Enum):
     """Funny rating enum"""
+
     NOT_FUNNY = "not funny"
     KINDA_FUNNY = "kinda funny"
     FUNNY = "funny"
     VERY_FUNNY = "very funny"
     HILARIOUS = "hilarious"
 
+
 class Judgement(BaseModel):
     """Judgement class"""
-    joke: Joke = Field(..., title="Joke", description="The joke that was judged")
-    funny_rating: FunnyRatingEnum = Field(..., title="Funny rating", description="How funny is the joke?")
-    explanation: str = Field(..., title="Explanation", description="Explanation for the funny_rating")
+
+    joke: str = Field(..., title="Joke", description="The joke that was judged")
+    funny_rating: FunnyRatingEnum = Field(
+        ..., title="Funny rating", description="How funny is the joke?"
+    )
+    explanation: str = Field(
+        ..., title="Explanation", description="Explanation for the funny_rating"
+    )
+
 
 class JokeJudge:
     """Joke judge class"""
+
     def __init__(self):
         openai.api_key = settings.OPENAI_API_KEY
         self.model = "gpt-3.5-turbo-16k"
         self.num_tries = 5
-        self.prompt = json.load(open(Path(__file__).parent / "prompt_with_safety.json", "r"))
-    
+        self.prompt = json.load(
+            open(Path(__file__).parent / "prompt_with_safety.json", "r")
+        )
+
     async def judge(
         self,
         content: str,
@@ -46,17 +65,19 @@ class JokeJudge:
         for try_num in range(self.num_tries):
             try:
                 logger.info(f"try {try_num+1}/{self.num_tries} to get a response")
-                response = await openai.Completion.acreate(
+                response = await openai.ChatCompletion.acreate(
                     model=self.model,
                     messages=messages,
                     temperature=0.1,
                     max_tokens=768,
                 )
                 reply = response["choices"][0]["message"]["content"]
-                response = json.loads(reply)
+                if reply == "Joke not detected":
+                    raise ValueError("Joke not detected")
 
-                funny_rating = FunnyRatingEnum(**response)
-                return Judgement(joke=Joke(content=content), funny_rating=funny_rating)
+                response = json.loads(reply)
+                
+                return Judgement(**response)
 
             except (ValueError, TypeError) as e:
                 logger.error(f"Error: {e}")

@@ -1,10 +1,10 @@
+import openai
 import uvicorn
 from fastapi import APIRouter, FastAPI
 from loguru import logger
-import openai
 
+from ..jokes import Joke, JokeJudge, Judgement
 from ..settings import settings
-from ..jokes import JokeJudge, Joke, Judgement
 
 openai.api_key = settings.OPENAI_API_KEY
 
