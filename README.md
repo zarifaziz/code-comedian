@@ -7,16 +7,16 @@ You think you have a funny developer joke? Let AI be the judge.
 - Python 3.11
 - Poetry
 ### Setup
-1. Copy the .env.example file into a new file named .env in the same directory:
-`cp .env.example .env`
+1. Copy the `.env.example` file into a new file named `.env` in the same directory:
+```cp .env.example .env```
 2. Open the .env file and replace the empty string with your OpenAI key:
-`OPENAI_API_KEY="your-openai-key"`
+```OPENAI_API_KEY="your-openai-key"```
 ### Installation
 1. Install the project dependencies using Poetry:
-`poetry install`
+```poetry install```
 ### Running the Server
 1. Run the server using the following command:
-`poetry run python -m src.code_comedian.api.main`
+```poetry run python -m src.code_comedian.api.main```
 This should start a server at
 `http://0.0.0.0:8000/code-comedian`
 ### Making Requests to the API Server
