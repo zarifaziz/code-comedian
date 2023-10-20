@@ -8,7 +8,7 @@ import uvicorn
 from fastapi import APIRouter, FastAPI, HTTPException
 from loguru import logger
 
-from ..jokes import Joke, JokeJudge, Judgement, JokeNotDetectedError
+from ..joke_judge import Joke, JokeJudge, Judgement, JokeNotDetectedError
 from ..settings import settings
 
 openai.api_key = settings.OPENAI_API_KEY
